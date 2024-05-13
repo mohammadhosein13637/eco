@@ -12,7 +12,7 @@ const VerifyOTPPage = () => {
 
   const handleVerifyOTP = async () => {
     try {
-      const response = await fetch("http://192.168.221.15:8000/auth/verify/", {
+      const response = await fetch("http://127.0.0.1:8000/auth/login/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

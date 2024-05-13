@@ -8,7 +8,7 @@ import Orders from './orders/page';
 import Profile from './profile/page';
 const TabBar = () => {
     const [activeTab, setActiveTab] = useState(1);
-  const router = useRouter();
+    const router = useRouter();
 
     const handleTabClick = (tabNumber) => {
         setActiveTab(tabNumber);
@@ -28,34 +28,37 @@ const TabBar = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto my-8">
-            <div className="flex justify-between bg-gray-200 p-4 rounded-md ">
-                <div
-                    onClick={() => handleTabClick(1)}
-                    className={`cursor-pointer p-2 rounded-md ${activeTab === 1 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'}`}
-                >
-                    
-                    Get Link
-                </div>
-                <div
-                    onClick={() => handleTabClick(2)}
-                    className={`cursor-pointer p-2 rounded-md ${activeTab === 2 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'}`}
-                >
-                    Orders
-                </div>
-                <div
-                    onClick={() => handleTabClick(3)}
-                    className={`cursor-pointer p-2 rounded-md ${activeTab === 3 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'}`}
-                >
-                    Profile
-                </div>
-            </div>
+        <>
+            <nav className="nav fixed top-0 w-full"> 
+                <ul className="flex justify-between sm:justify-start items-center sm:gap-10 w-full h-20 md:h-28 px-10 Child:text-sm sm:Child:text-base md:Child:text-lg">
+                    <item
+                        onClick={() => handleTabClick(1)}
+                        className={`cursor-pointer text-lg px-2 ${activeTab === 1 ? 'text-white font-semibold' : ' text-white/85'} transition duration-500`}
+                    >
+                        Get Link
+                    </item>
+                    <item
+                        onClick={() => handleTabClick(2)}
+                        className={`cursor-pointer text-lg px-2 ${activeTab === 2 ? 'text-white font-semibold' : ' text-white/85'} transition duration-500`}
+                    >
+                        Orders
+                    </item>
+                    <li
+                        onClick={() => handleTabClick(3)}
+                        className={`cursor-pointer text-lg px-4 py-2 sm:ml-auto ${activeTab === 3 ? 'text-white font-semibold' : ' text-white/85'} sm:border border-white/80 rounded-lg hover:border-white hover:text-white transition duration-300`}
+                    >
+                        Profile
+                    </li>
+                </ul>
+            </nav>
             <div>
-                {activeTab==1 &&<Linker/>}
-                {activeTab==2 &&<Orders/>}
-                {activeTab==3 &&<Profile/>}
+                {activeTab == 1 && <Linker />}
+                {activeTab == 2 && <Orders />}
+                {activeTab == 3 && <Profile />}
             </div>
-        </div>
+
+        </>
+
     );
 };
 

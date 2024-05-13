@@ -10,7 +10,7 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://192.168.221.15:8000/auth/login/", {
+      const response = await fetch("http://127.0.0.1:8000/auth/login/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -22,7 +22,7 @@ const LoginPage = () => {
       Cookies.set("phone", phone);
       Cookies.get("otp");
       console.log(data.otp);
-      router.push("/login/verify");
+      router.push("/auth/login/verify");
     } catch (error) {
       console.error("Error logging in:", error);
       // Handle error (e.g., display error message to the user)
