@@ -1,27 +1,44 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import styles from "./LoginPage.module.css"; // Import CSS module for styling
 import Cookies from "js-cookie";
-
+import Config from "../../constants/Config";
+console.log(Config);
 const LoginPage = () => {
   const [phone, setPhone] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
 
+  const validatePhone = () => {
+    const phoneRegex = /^98\d{10}$/; // Regex for +98 followed by 9 digits
+    if (!phone) {
+      setError("Phone number cannot be empty");
+      return false;
+    } else if (!phone.match(phoneRegex)) {
+      setError("Invalid phone number format. Must be in +98XXXXXXXXX format");
+      return false;
+    }
+    return true;
+  };
+
   const handleLogin = async () => {
+    if (!validatePhone()) {
+      return; // Don't proceed with login if phone number is invalid
+    }
     try {
-      const response = await fetch("http://127.0.0.1:8000/auth/login/", {
+      const response = await fetch(`${Config.baseUrl}/auth/login/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({ phone: phone }),
       });
+      // let testJson = JSON.stringify({ phone: phone })
+      // console.log(testJson);
       const data = await response.json();
-      Cookies.set("otp", data.otp); // Set OTP cookie using js-cookie
+      Cookies.set("otp", data.otp);
       Cookies.set("phone", phone);
-      Cookies.get("otp");
-      console.log(data.otp);
+      console.log(Cookies.get("otp"));
       router.push("/auth/login/verify");
     } catch (error) {
       console.error("Error logging in:", error);
@@ -29,34 +46,8 @@ const LoginPage = () => {
     }
   };
 
-  //   return (
-  //     <div className="min-h-screen bg-gray-800 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-  //       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-  //         <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-  //           Login
-  //         </h2>
-  //       </div>
-
-  //       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-  //         <div className="bg-gray-700 py-8 px-4 shadow sm:rounded-lg sm:px-10">
-  //           <form action="" className="space-y-6" >
-  //             <h1>Login Page</h1>
-  //             <input
-  //               type="text"
-  //               placeholder="Enter your phone number"
-  //               value={phone}
-  //               onChange={(e) => setPhone(e.target.value)}
-  //               className={styles.input}
-  //             />
-  //             <button onClick={handleLogin} className={styles.button}>
-  //               Login
-  //             </button>
-  //           </form>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
   return (
+
     <div className="min-h-screen bg-gray-800 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
@@ -66,10 +57,10 @@ const LoginPage = () => {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-gray-700 py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <div className="space-y-6">
-            <div >
+            <div>
               <label
                 htmlFor="phone"
-                className="block text-sm font-medium text-white space-y-3" 
+                className="block text-sm font-medium text-white space-y-3"
               >
                 Phone Number
               </label>
@@ -77,14 +68,20 @@ const LoginPage = () => {
                 <input
                   id="phone"
                   name="phone"
-                  type="text"
+                  type="tel"
                   autoComplete="tel"
                   required
                   className="appearance-none block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  value={"+" +phone} // Set default value to start with "+"
+                  onChange={(e) =>
+                    setPhone(
+                       e.target.value.replace(/\D/g, ""),
+                      console.log(phone)
+                    )
+                  } // Remove non-numeric characters
                 />
               </div>
+              {error && <p className="text-red-500">{error}</p>}
             </div>
 
             <div>
@@ -96,8 +93,7 @@ const LoginPage = () => {
                 Login
               </button>
             </div>
-            </div>
-          
+          </div>
         </div>
       </div>
     </div>
